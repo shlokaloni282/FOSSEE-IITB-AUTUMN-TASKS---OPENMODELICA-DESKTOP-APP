@@ -325,6 +325,16 @@ Reason:
 Stop Time must be less than 5.
 ```
 
+```text
+Start Time = 2
+Stop Time  = 6
+```
+
+Reason:
+
+```text
+Stop Time must be less than 5.
+```
 ---
 
 # ⚙️ OpenModelica Model Compilation
