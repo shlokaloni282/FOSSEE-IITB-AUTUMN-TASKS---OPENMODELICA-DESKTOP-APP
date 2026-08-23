@@ -1,8 +1,10 @@
 # Two Connected Tanks — OpenModelica Desktop App
 
-A PyQt6 desktop application for running an OpenModelica-generated simulation of the `NonInteractingTanks.TwoConnectedTanks` model.
+A PyQt6 desktop application for running an OpenModelica-generated
+simulation of the `NonInteractingTanks.TwoConnectedTanks` model.
 
-This project was developed as part of the **FOSSEE/OpenModelica Desktop App Screening Task**.
+This project was developed as part of the **FOSSEE/OpenModelica Desktop App
+Screening Task**.
 
 ---
 
@@ -10,37 +12,31 @@ This project was developed as part of the **FOSSEE/OpenModelica Desktop App Scre
 
 The project consists of two main parts:
 
-1. **OpenModelica Simulation**
-   - Load and compile the supplied `TwoConnectedTanks` Modelica model using OpenModelica/OMEdit.
-   - Generate the simulation executable and its dependent files.
+1. Compiling the supplied `TwoConnectedTanks` Modelica model using
+   OpenModelica to generate a simulation executable and its dependent files.
+2. Building a Python/PyQt6 desktop application that allows the user to
+   select the generated executable, provide simulation start and stop times,
+   and launch the simulation.
 
-2. **Python Desktop Application**
-   - Build a desktop GUI using Python and PyQt6.
-   - Allow the user to select the generated OpenModelica executable.
-   - Accept simulation start and stop times.
-   - Validate the input parameters.
-   - Execute the simulation with the supplied parameters.
-   - Display the simulation status and execution errors.
-
-The application provides a simple graphical interface for running the compiled OpenModelica simulation without manually entering simulation commands in a terminal.
+The application validates the simulation parameters before execution and
+reports whether the simulation completed successfully.
 
 ---
 
-## 🔄 Application Workflow
+## 🔄 Workflow
 
 ```mermaid
 flowchart TD
     A["TwoConnectedTanks Modelica Model"]
     B["OpenModelica / OMEdit"]
     C["Compile Model"]
-    D["Generated Executable and Dependencies"]
+    D["Executable + Dependencies"]
     E["PyQt6 Desktop Application"]
-    F["Select Executable"]
-    G["Enter Start and Stop Time"]
-    H{"Validate Input"}
-    I["Run Simulation"]
-    J["Simulation Completed"]
-    K["Display Error"]
+    F["Select Executable + Enter Times"]
+    G{"0 <= Start < Stop < 5"}
+    H["Run Simulation"]
+    I["Simulation Successful"]
+    J["Display Error"]
 
     A --> B
     B --> C
@@ -48,36 +44,27 @@ flowchart TD
     D --> E
     E --> F
     F --> G
-    G --> H
-    H -->|Valid| I
-    H -->|Invalid| K
-    I -->|Success| J
-    I -->|Failure| K
+    G -->|Valid| H
+    G -->|Invalid| J
+    H -->|Success| I
+    H -->|Failure| J
 ```
 
-### Simulation Parameter Rule
+### Workflow Description
 
-The application enforces the condition:
-
-```text
-0 <= start time < stop time < 5
-```
-
-For example:
-
-```text
-Start Time: 0
-Stop Time: 4
-```
-
-is valid.
-
-```text
-Start Time: 0
-Stop Time: 5
-```
-
-is invalid because the stop time must be strictly less than `5`.
+- The supplied Modelica model is loaded into OpenModelica/OMEdit.
+- `NonInteractingTanks.TwoConnectedTanks` is compiled to generate the
+  simulation executable and its dependent files.
+- The generated executable is placed inside the `executable/` directory.
+- The PyQt6 application allows the user to browse and select the executable.
+- The user enters the simulation start time and stop time.
+- The application validates the required condition:
+  `0 <= start time < stop time < 5`.
+- The executable is launched with the corresponding OpenModelica
+  simulation arguments.
+- The application reports whether the simulation was successful or failed.
+- OpenModelica generates simulation result and log files which can also
+  be inspected using OMEdit.
 
 ---
 
@@ -88,28 +75,25 @@ is invalid because the stop time must be strictly less than `5`.
 - Start time input
 - Stop time input
 - Input validation
-- OpenModelica simulation execution
-- Command-line simulation parameters
-- Simulation success/failure status
-- Error reporting through GUI dialogs
-- Object-oriented Python application structure
-- Organized separation of:
-  - Python application
-  - Modelica source files
-  - Generated simulation files
-  - Screenshots
+- Enforces the required condition:
+
+  `0 <= start time < stop time < 5`
+
+- Passes start and stop time parameters to the OpenModelica executable
+- Executes the compiled OpenModelica simulation
+- Displays simulation status
+- Displays execution errors when the simulation fails
+- Uses an object-oriented Python application structure
+- Keeps the Modelica model, executable and GUI code organized separately
 
 ---
 
 ## 🛠️ Technologies Used
 
-| Technology | Purpose |
-|---|---|
-| Python 3.6+ | Desktop application development |
-| PyQt6 | Graphical user interface |
-| OpenModelica | Model compilation and simulation |
-| Modelica | Two Connected Tanks simulation model |
-| Windows 10/11 | Development and testing environment |
+- **Python 3.6+**
+- **PyQt6**
+- **OpenModelica**
+- **Windows 10/11**
 
 The current implementation was developed and tested on **Windows**.
 
@@ -125,14 +109,16 @@ FOSSEE_TwoConnectedTanks/
 ├── README.md
 │
 ├── executable/
-│   ├── TwoConnectedTanks.exe
 │   ├── TwoConnectedTanks.bat
+│   ├── TwoConnectedTanks.exe
 │   ├── TwoConnectedTanks_init.xml
 │   ├── TwoConnectedTanks_info.json
 │   ├── TwoConnectedTanks_external_functions.json
+│   ├── TwoConnectedTanks_JacA.bin
+│   ├── TwoConnectedTanks_prof.intdata
+│   ├── TwoConnectedTanks_prof.realdata
 │   ├── TwoConnectedTanks_res.mat
-│   ├── TwoConnectedTanks.log
-│   └── other OpenModelica-generated files
+│   └── TwoConnectedTanks.log
 │
 ├── model/
 │   └── NonInteractingTanks/
@@ -144,48 +130,54 @@ FOSSEE_TwoConnectedTanks/
 │       └── TwoConnectedTanks.mo
 │
 └── screenshots/
-    ├── condition.png
+    ├── condition1.png
+    ├── condition2.png
     ├── generated_files.png
-    ├── pyqt_app.png
+    ├── given_condition.png
     └── simulation_success.png
 ```
 
-> **Note:** The exact generated files may vary depending on the OpenModelica version. The complete generated file set should be kept together because the executable may depend on accompanying initialization, result, metadata, and runtime files.
+> The exact generated files may vary slightly depending on the
+> OpenModelica version. The complete generated file set should be kept
+> together with the compiled executable.
 
 ---
 
-# 🚀 Getting Started
+## ⚙️ Requirements
 
-## 1. Prerequisites
-
-Make sure the following are installed:
+Before running the application, make sure the following are installed:
 
 - Windows 10/11
 - Python 3.6 or later
 - OpenModelica
 - PyQt6
 
-OpenModelica should be installed before attempting to run the simulation.
+OpenModelica is required because the application executes the compiled
+OpenModelica simulation program.
 
 ---
 
-## 2. Install Python Dependencies
+## 📦 Installation
 
-Open a terminal in the project directory.
-
-Optionally create a virtual environment:
+Clone the repository:
 
 ```bash
-python -m venv venv
+git clone https://github.com/shlokaloni282/FOSSEE-IITB-AUTUMN-TASKS---OPENMODELICA-DESKTOP-APP.git
 ```
 
-Activate it on Windows:
+Navigate to the project directory:
 
 ```bash
-venv\Scripts\activate
+cd FOSSEE-IITB-AUTUMN-TASKS---OPENMODELICA-DESKTOP-APP
 ```
 
-Install the required Python package:
+Navigate to the application directory:
+
+```bash
+cd FOSSEE_TwoConnectedTanks
+```
+
+Install the Python dependency:
 
 ```bash
 python -m pip install -r requirements.txt
@@ -199,9 +191,9 @@ PyQt6
 
 ---
 
-# ▶️ Running the Application
+## ▶️ Run the Application
 
-From the project root:
+From the `FOSSEE_TwoConnectedTanks` directory, run:
 
 ```bash
 python app.py
@@ -211,82 +203,57 @@ The PyQt6 desktop application will open.
 
 ---
 
-# 🖥️ Using the Application
+## 🖥️ Using the Application
 
 ### Step 1 — Select the executable
 
-Click the **Browse Executable** button and select:
+Click **Browse Executable** and select:
 
 ```text
 executable/TwoConnectedTanks.exe
 ```
 
-The selected executable is the compiled OpenModelica simulation program.
+The application uses the compiled OpenModelica executable generated from
+the `TwoConnectedTanks` model.
 
-The generated `TwoConnectedTanks.bat` launcher is also retained in the executable directory because OpenModelica-generated Windows simulations may require the runtime environment configured by the launcher.
+### Step 2 — Enter the start time
 
----
+Enter an integer start time.
 
-### Step 2 — Enter Start Time
-
-Enter a valid integer start time.
-
-Example:
+For example:
 
 ```text
-0
+3
 ```
 
----
+### Step 3 — Enter the stop time
 
-### Step 3 — Enter Stop Time
+Enter an integer stop time greater than the start time.
 
-Enter a valid integer stop time.
-
-Example:
+For example:
 
 ```text
 4
 ```
 
----
+### Step 4 — Run the simulation
 
-### Step 4 — Run the Simulation
+Click **Run Simulation**.
 
-Click:
-
-```text
-Run Simulation
-```
-
-The application executes the selected OpenModelica program and passes the simulation parameters using the OpenModelica simulation flags:
-
-```text
--startTime=<value>
--stopTime=<value>
-```
-
-For example:
-
-```text
--startTime=0
--stopTime=4
-```
+The application validates the input values and executes the selected
+OpenModelica program with the specified simulation times.
 
 ---
 
-# 🔍 Input Validation
+## ✅ Input Validation
 
-Before executing the simulation, the application checks:
+The application checks the following conditions before running the
+simulation:
 
-1. An executable has been selected.
-2. Start time is numeric.
-3. Stop time is numeric.
-4. Start time is greater than or equal to `0`.
-5. Start time is less than stop time.
-6. Stop time is strictly less than `5`.
-
-The required condition is:
+1. An executable must be selected.
+2. Start time must be numeric.
+3. Stop time must be numeric.
+4. The values must satisfy:
 
 ```text
 0 <= start time < stop time < 5
@@ -295,192 +262,238 @@ The required condition is:
 ### Valid Example
 
 ```text
-Start Time = 0
-Stop Time  = 4
+Start Time: 3
+Stop Time: 4
+```
+
+This satisfies:
+
+```text
+0 <= 3 < 4 < 5
 ```
 
 ### Invalid Example
 
 ```text
-Start Time = 2
-Stop Time  = 2
+Start Time: 0
+Stop Time: 5
 ```
 
-Reason:
+This is rejected because the task requires:
 
 ```text
-Start Time must be less than Stop Time.
+stop time < 5
 ```
 
-### Invalid Example
+The application displays an appropriate validation message instead of
+starting the simulation.
 
-```text
-Start Time = 0
-Stop Time  = 5
-```
-
-Reason:
-
-```text
-Stop Time must be less than 5.
-```
-
-```text
-Start Time = 2
-Stop Time  = 6
-```
-
-Reason:
-
-```text
-Stop Time must be less than 5.
-```
 ---
 
-# ⚙️ OpenModelica Model Compilation
+## 🔧 OpenModelica Simulation Arguments
 
-The supplied Modelica package was loaded into **OMEdit** and the following model was compiled:
-
-```text
-NonInteractingTanks.TwoConnectedTanks
-```
-
-Compilation generates the simulation executable together with several supporting files.
-
-The generated files were collected into:
+The start and stop times entered through the GUI are passed to the
+compiled OpenModelica executable using the simulation command-line
+options:
 
 ```text
-executable/
+-startTime=<value>
+-stopTime=<value>
 ```
 
-Important generated files include:
+For example, for:
+
+```text
+Start Time: 3
+Stop Time: 4
+```
+
+the application executes the simulation using parameters equivalent to:
+
+```text
+-startTime=3
+-stopTime=4
+```
+
+This allows the same compiled simulation executable to be run with
+different valid simulation time ranges.
+
+---
+
+## 🧩 Model and Simulation Workflow
+
+The supplied model package contains:
+
+```text
+NonInteractingTanks
+└── TwoConnectedTanks
+```
+
+The model was loaded and compiled using OpenModelica/OMEdit.
+
+Compilation generates:
 
 ```text
 TwoConnectedTanks.exe
-TwoConnectedTanks.bat
+```
+
+along with supporting files such as:
+
+```text
 TwoConnectedTanks_init.xml
-TwoConnectedTanks_res.mat
 TwoConnectedTanks_info.json
 TwoConnectedTanks_external_functions.json
+TwoConnectedTanks_res.mat
 TwoConnectedTanks.log
 ```
 
-The executable and its generated companion files should be kept from the same OpenModelica build.
+These generated files are retained in the `executable/` directory.
+
+The executable and its corresponding generated files should remain
+together because some generated files are required by the simulation
+runtime.
 
 ---
 
-# 🧩 Model Compatibility Changes
+## 📝 Implementation Notes
 
-During development, two minor compatibility changes were made to the supplied Modelica files so that the model could compile and run successfully with the installed OpenModelica version.
+During development, minor compatibility changes were required in the
+supplied Modelica files to successfully compile and execute the model
+with the installed OpenModelica version.
 
-### 1. `FlowConnect.mo`
+### `FlowConnect.mo`
 
-The flow variable was declared using:
+The flow variable was defined using:
 
 ```modelica
 flow Real F;
 ```
 
-### 2. `Tank2.mo`
+### `Tank2.mo`
 
-The `V/Q1` calculation was protected against zero-flow conditions to avoid invalid division during simulation.
+The `V/Q1` calculation was protected against a zero-flow condition to
+avoid an invalid division during simulation initialization.
 
-These changes were made only to ensure compatibility and successful execution with the installed OpenModelica environment.
-
-They are implementation details of this project and are not additional requirements of the screening task.
-
----
-
-# 📊 Simulation Output
-
-When the simulation completes successfully, OpenModelica generates the simulation result files in the executable directory.
-
-The generated result includes:
-
-```text
-TwoConnectedTanks_res.mat
-```
-
-The application also checks the process return code and reports the execution status.
-
-A successful execution returns:
-
-```text
-Return Code: 0
-```
-
-and the OpenModelica output reports successful simulation completion.
+These changes were made only to ensure compatibility and successful
+execution with the installed OpenModelica version. They are documented
+here for transparency.
 
 ---
 
-# 🖼️ Screenshots
+## 📊 Generated Simulation Results
 
-The repository contains screenshots demonstrating the implementation and testing process.
+When the simulation runs successfully, OpenModelica generates result
+and diagnostic files in the executable directory.
 
-### OpenModelica Generated Files
+Important files include:
 
-![Generated OpenModelica files](screenshots/generated_files.png)
+### `TwoConnectedTanks.exe`
 
-### PyQt6 Application
+The compiled OpenModelica simulation executable launched by the PyQt6
+application.
 
-![PyQt6 application](screenshots/pyqt_app.png)
+### `TwoConnectedTanks_res.mat`
+
+The generated simulation result file. It can be loaded and inspected
+using OMEdit for plotting and variable analysis.
+
+### `TwoConnectedTanks.log`
+
+Contains simulation log and diagnostic information.
+
+### `TwoConnectedTanks_init.xml`
+
+Contains initialization information associated with the compiled model.
+
+> The executable and its generated initialization/dependency files should
+> come from the same OpenModelica build. Do not mix files from different
+> builds.
+
+---
+
+## 📸 Screenshots
+
+The `screenshots/` directory contains screenshots demonstrating the
+development and testing of the application.
 
 ### Input Validation
 
-![Input validation](screenshots/condition.png)
+![Input validation](screenshots/condition1.png)
+
+![Input validation](screenshots/condition2.png)
+
+### Required Condition
+
+![Required condition](screenshots/given_condition.png)
+
+### Generated OpenModelica Files
+
+![Generated files](screenshots/generated_files.png)
 
 ### Successful Simulation
 
 ![Successful simulation](screenshots/simulation_success.png)
 
+The successful simulation screenshot demonstrates the PyQt6 application
+running the compiled OpenModelica executable with valid simulation
+parameters and receiving successful simulation output.
+
 ---
 
-# 🧱 Application Design
+## 🧪 Verification
 
-The desktop application follows an object-oriented structure.
+The application was tested using valid simulation parameters satisfying
+the required condition.
 
-The main GUI functionality is encapsulated in the application class.
-
-The application is responsible for:
+Example test:
 
 ```text
-GUI creation
-     ↓
-User input
-     ↓
-Input validation
-     ↓
-Executable selection
-     ↓
-Simulation process execution
-     ↓
-Return-code checking
-     ↓
-Status / error reporting
+Start Time = 3
+Stop Time = 4
 ```
 
-This keeps the user interface and simulation execution logic organized within the application rather than relying on manual terminal commands.
+The application successfully executed the compiled
+`TwoConnectedTanks.exe`.
+
+The simulation returned:
+
+```text
+Return Code: 0
+```
+
+and OpenModelica reported:
+
+```text
+LOG_SUCCESS
+The simulation finished successfully.
+```
+
+The generated `.mat` result file can subsequently be opened in OMEdit
+for inspecting simulation variables and plots.
 
 ---
 
-# 🐛 Troubleshooting
+## 🛠️ Troubleshooting
 
-## OpenModelica executable fails to start
+### PyQt6 is not installed
 
-Make sure:
+Install the dependencies using:
 
-- OpenModelica is installed.
-- The generated executable is present.
-- The generated supporting files are present.
-- The executable and `_init.xml` file belong to the same OpenModelica build.
+```bash
+python -m pip install -r requirements.txt
+```
 
-If the generated Windows executable requires OpenModelica runtime DLLs, use the generated `.bat` launcher or ensure the OpenModelica runtime is available in the system environment.
+or:
+
+```bash
+python -m pip install PyQt6
+```
 
 ---
 
-## Simulation input is rejected
+### The application rejects the time values
 
-Check that:
+Make sure the values satisfy:
 
 ```text
 0 <= start < stop < 5
@@ -489,102 +502,55 @@ Check that:
 For example:
 
 ```text
-0 → 4
+Start Time: 3
+Stop Time: 4
 ```
 
 is valid.
 
 ---
 
-## Simulation fails after changing generated files
-
-Do not mix generated files from different OpenModelica builds.
-
-Regenerate the model and copy the complete generated output into:
-
-```text
-executable/
-```
-
----
-
-## Simulation returns a non-zero return code
+### The simulation fails
 
 Check:
 
-```text
-TwoConnectedTanks.log
-```
-
-and the terminal output for additional OpenModelica diagnostic information.
-
-Also verify that the executable has access to its required runtime dependencies.
+- The selected executable exists.
+- The executable is the generated `TwoConnectedTanks.exe`.
+- The generated dependency files are present in the same directory.
+- OpenModelica is correctly installed.
+- `TwoConnectedTanks.log` for simulation diagnostics.
 
 ---
 
-# ✅ Verification
+### The result file cannot be loaded correctly
 
-The application was tested using:
-
-```text
-Start Time: 0
-Stop Time: 4
-```
-
-The simulation completed successfully with:
-
-```text
-Return Code: 0
-```
-
-The OpenModelica output also reported successful initialization and simulation completion.
-
-The input validation was additionally tested with invalid time combinations to ensure that the required condition:
-
-```text
-0 <= start time < stop time < 5
-```
-
-is enforced.
+Make sure the `.exe`, `_init.xml`, and other generated files belong to the
+same OpenModelica compilation. Regenerate the model if necessary rather
+than mixing files from different builds.
 
 ---
 
-# 📋 Screening Task Requirements
+## 🎯 Task Requirements Addressed
 
-The implementation addresses the major requirements of the screening task:
-
-| Requirement | Status |
+| Requirement | Implementation |
 |---|---|
-| Python 3.6+ | ✅ |
-| PyQt6 | ✅ |
-| OpenModelica | ✅ |
-| Compile `TwoConnectedTanks` | ✅ |
-| Generated executable | ✅ |
-| Dependent generated files | ✅ |
-| Executable selection | ✅ |
-| Start time input | ✅ |
-| Stop time input | ✅ |
-| Parameter passing | ✅ |
-| Input validation | ✅ |
-| Simulation execution | ✅ |
-| Error handling | ✅ |
-| OOP implementation | ✅ |
-| Documentation | ✅ |
-| Windows 10/11 testing | ✅ |
+| Python 3.6+ | Implemented using Python |
+| PyQt6 | Used for the desktop GUI |
+| OpenModelica | Used to compile and generate the simulation executable |
+| Executable selection | Implemented using a file dialog |
+| Start time | GUI input field |
+| Stop time | GUI input field |
+| Simulation execution | Implemented using the compiled executable |
+| Simulation parameters | Passed using `-startTime` and `-stopTime` |
+| Required condition | `0 <= start < stop < 5` enforced |
+| Error handling | Implemented |
+| OOP | GUI implemented using a Python class |
+| Documentation | README and screenshots provided |
 
 ---
 
-# 📚 References
-
-- [OpenModelica](https://openmodelica.org/)
-- [OpenModelica User Guide — Simulation Flags](https://openmodelica.org/doc/OpenModelicaUsersGuide/latest/simulationflags.html#simflag-override)
-- [Python](https://www.python.org/)
-- [PyQt6](https://pypi.org/project/PyQt6/)
-
----
-
-# 👩‍💻 Author
+## 👩‍💻 Author
 
 **Shloka Loni**
 
-FOSSEE / OpenModelica Desktop App Screening Task
+FOSSEE/OpenModelica Desktop App Screening Task
