@@ -355,27 +355,19 @@ runtime.
 
 ---
 
-## 📝 Implementation Notes
+## Model Compatibility Changes
 
-During development, minor compatibility changes were required in the
-supplied Modelica files to successfully compile and execute the model
-with the installed OpenModelica version.
+During development, two minor compatibility changes were required to run
+the supplied model package with the installed OpenModelica version:
 
-### `FlowConnect.mo`
+1. `FlowConnect.mo`
+   - Changed `Real F;` to `flow Real F;`.
 
-The flow variable was defined using:
+2. `Tank2.mo`
+   - Added protection for the `V/Q1` calculation when the flow is zero.
 
-```modelica
-flow Real F;
-```
-
-### `Tank2.mo`
-
-The `V/Q1` calculation was protected against a zero-flow condition to
-avoid an invalid division during simulation initialization.
-
-These changes were made only to ensure compatibility and successful
-execution with the installed OpenModelica version. They are documented
+These changes were made only to ensure the supplied model could be compiled
+and simulated successfully with the installed OpenModelica version. They are documented
 here for transparency.
 
 ---
