@@ -410,26 +410,22 @@ development and testing of the application.
 
 ### Input Validation
 
-![Input validation](<img width="1919" height="984" alt="condition1" src="https://github.com/user-attachments/assets/de32dde3-83aa-42fe-b623-b94d6263fb97" />
-)
+![Input validation](./screenshots/condition1.png)
 
-![Input validation](<img width="1919" height="1079" alt="condition2" src="https://github.com/user-attachments/assets/ae5a7047-ba0d-45de-92f8-7e6039604cef" />
-)
+
+![Input validation](./screenshots/condition2.png)
 
 ### Required Condition
 
-![Required condition](<img width="1919" height="960" alt="given_condition" src="https://github.com/user-attachments/assets/c8ea85a3-3b72-4243-a357-d75638eec16a" />
-)
+![Required condition](./screenshots/given_condition.png)
 
 ### Generated OpenModelica Files
 
-![Generated files](<img width="1919" height="1023" alt="generated_files" src="https://github.com/user-attachments/assets/75da7dc0-4505-483f-bf1a-7698c85e53ae" />
-)
+![Generated files](./screenshots/generated_files.png)
 
 ### Successful Simulation
 
-![Successful simulation](<img width="1920" height="1080" alt="simulation_success" src="https://github.com/user-attachments/assets/eda65e81-8e74-4a9f-a50a-a7bd3807a660" />
-)
+![Successful simulation](./screenshots/simulation_success.png)
 
 The successful simulation screenshot demonstrates the PyQt6 application
 running the compiled OpenModelica executable with valid simulation
